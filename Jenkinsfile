@@ -23,7 +23,12 @@ pipeline {
         stage('Trivy Security Scan') {
             steps {
                 sh '''
+                    mkdir -p /var/lib/jenkins/trivy-tmp
+
+                    export TMPDIR=/var/lib/jenkins/trivy-tmp
+
                     trivy image \
+                      --cache-dir /var/lib/jenkins/.cache/trivy \
                       --severity HIGH,CRITICAL \
                       --exit-code 1 \
                       jenkins-java-cicd:latest
